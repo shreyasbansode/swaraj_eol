@@ -1,0 +1,129 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <!-- Variables for data binding -->
+        <variable
+            name="viewModel"
+            type="com.carnot.swaraj.eol.LinkDeviceAndTractorViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Step 1"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Scan Device QR"
+                    android:textSize="18sp"
+                    android:textColor="@{viewModel.isDeviceQrScanned ? @color/colorPrimary : @color/black}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='IMEI:'
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text='ICCID:'
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:id="@+id/btnScanDeviceQr"
+                style="@style/CustomButton"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:drawableRight="@drawable/baseline_qr_code_scanner_24"
+                android:drawableTint="@color/white"
+                android:layout_gravity="end"
+                android:text="SCAN" />
+
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="8dp"
+            android:background="@color/grey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.7"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Step 2"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scan Tractor VIN"
+            android:textSize="18sp"
+            android:textColor="@{viewModel.isTractorVinScanned ? @color/colorPrimary : @color/black}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='VIN:'
+            android:textSize="14sp" />
+
+    </LinearLayout>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:id="@+id/btnScanTractorVin"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:drawableRight="@drawable/baseline_qr_code_scanner_24"
+            android:drawableTint="@color/white"
+            android:text="SCAN"/>
+
+    </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btnSubmit"
+            style="@style/CustomButton"
+            android:text="SUBMIT"
+            android:enabled="@{viewModel.isSubmitEnabled}"
+            android:backgroundTint="@{viewModel.isSubmitEnabled ? @color/colorPrimary : @color/grey}" />
+    </LinearLayout>
+</layout>
