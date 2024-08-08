@@ -27,17 +27,11 @@ class LinkDeviceAndTractorActivity : AppCompatActivity() {
         scanIntent = IntentIntegrator(this)
 
         binding.btnScanDeviceQr.setOnClickListener {
-            if (!viewModel.isWeb) {
-                //startActivityForResult(Intent(this, QRScannerActivity::class.java), 1)
                 qrCodeScan(1)
-            }
         }
 
         binding.btnScanTractorVin.setOnClickListener {
-            if (!viewModel.isWeb) {
-                //startActivityForResult(Intent(this, QRScannerActivity::class.java), 2)
                 qrCodeScan(2)
-            }
         }
 
         binding.btnSubmit.setOnClickListener {

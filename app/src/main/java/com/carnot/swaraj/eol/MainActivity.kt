@@ -31,7 +31,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnEndOfLineTesting.setOnClickListener {
-            // Handle navigation for End of Line Testing
+            if (checkCameraPermission()) {
+                startActivity(Intent(this, EndOfLineTestingActivity::class.java))
+            }else {
+                Toast.makeText(this, "Camera permission not provided", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
