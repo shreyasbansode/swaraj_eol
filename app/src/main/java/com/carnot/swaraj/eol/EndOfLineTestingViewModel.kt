@@ -4,10 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.carnot.swaraj.eol.network.ApiService
+import com.carnot.swaraj.eol.network.Repository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class EndOfLineTestingViewModel : ViewModel() {
+
+    private val apiService: ApiService = ApiService.create()
+    private val repository: Repository = Repository(apiService)
 
     private val _isVinScanned = MutableLiveData(false)
     val isVinScanned: LiveData<Boolean> get() = _isVinScanned
@@ -24,8 +29,8 @@ class EndOfLineTestingViewModel : ViewModel() {
     private val _isSubmitEnabled = MutableLiveData(false)
     val isSubmitEnabled: LiveData<Boolean> get() = _isSubmitEnabled
 
-    private val _retryTime = MutableLiveData<Long>(0)
-    val retryTime: LiveData<Long> get() = _retryTime
+    private val _retryTime = MutableLiveData<String>("0")
+    val retryTime: LiveData<String> get() = _retryTime
 
     private val _vin = MutableLiveData("")
     val vin: LiveData<String> get() = _vin
@@ -35,10 +40,11 @@ class EndOfLineTestingViewModel : ViewModel() {
         _isVinScanned.value = true
         _vin.value = result
         // Start verifying connectivity
-        verifyConnectivity()
+        //verifyConnectivity()
+        startRetryTimer()
     }
 
-    private fun verifyConnectivity() {
+    fun verifyConnectivity() {
         viewModelScope.launch {
             delay(5000) // Simulate a delay for verification
             // Randomly set statuses for demonstration
@@ -58,11 +64,13 @@ class EndOfLineTestingViewModel : ViewModel() {
         viewModelScope.launch {
             var timeLeft = 300 // Retry after 5 minutes
             while (timeLeft > 0) {
-                _retryTime.value = timeLeft.toLong()
+                val minutes = timeLeft / 60
+                val seconds = timeLeft % 60
+                _retryTime.value = String.format("%02d:%02d", minutes, seconds)
                 delay(1000)
                 timeLeft -= 1
             }
-            _retryTime.value = 0
+            _retryTime.value = "0"
             // Retry connectivity check after timer ends
             verifyConnectivity()
         }

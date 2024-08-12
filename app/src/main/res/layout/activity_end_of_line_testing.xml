@@ -75,6 +75,17 @@
             android:layout_height="1dp"
             android:layout_marginVertical="8dp"
             android:background="@color/grey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.7"
+        android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,6 +96,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Verifying Device Connectivity" />
+
+    </LinearLayout>
+
+        <Button
+            android:id="@+id/btnRetry"
+            android:layout_weight="0.3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text='@{viewModel.retryTime == "0" ? @string/retry : "Retry In: "+viewModel.retryTime}'
+            android:enabled='@{viewModel.retryTime == "0"}'
+            android:textColor="@android:color/white"
+            android:background="@color/colorPrimary"
+            android:padding="8dp"
+            android:textSize="10sp"
+            android:onClick="@{() -> viewModel.verifyConnectivity()}"
+            />
+
+    </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"

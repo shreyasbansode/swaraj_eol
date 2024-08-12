@@ -3,9 +3,13 @@ package com.carnot.swaraj.eol
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.carnot.swaraj.eol.network.ApiService
+import com.carnot.swaraj.eol.network.Repository
 
 class LinkDeviceAndTractorViewModel : ViewModel() {
-    val isWeb: Boolean = false  // Change this based on platform detection
+
+    private val apiService: ApiService = ApiService.create()
+    private val repository: Repository = Repository(apiService)
 
     private val _isDeviceQrScanned = MutableLiveData(false)
     val isDeviceQrScanned: LiveData<Boolean> get() = _isDeviceQrScanned

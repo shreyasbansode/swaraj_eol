@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Swaraj EOL</string>
+    <string name="retry">Retry</string>
+    <string name="retry_in">Retry in: </string>
 </resources>
