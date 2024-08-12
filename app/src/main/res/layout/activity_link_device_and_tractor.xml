@@ -1,6 +1,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <import type="android.view.View"/>
         <!-- Variables for data binding -->
         <variable
             name="viewModel"
@@ -37,13 +38,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='IMEI:'
+                    android:text='@{"IMEI: "+viewModel.deviceImei}'
                     android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='ICCID:'
+                    android:text='@{"ICCID: "+viewModel.deviceIccid}'
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -57,9 +58,17 @@
                 android:textColor="@color/white"
                 android:drawableRight="@drawable/baseline_qr_code_scanner_24"
                 android:drawableTint="@color/white"
+                android:visibility="@{viewModel.isDeviceQrScanned ? View.GONE : View.VISIBLE}"
                 android:layout_gravity="end"
                 android:text="SCAN" />
 
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:tint="@color/colorPrimary"
+                android:visibility="@{viewModel.isDeviceQrScanned ? View.VISIBLE : View.GONE}"
+                android:src="@drawable/baseline_check_circle_outline_24"
+                android:layout_weight="0.3"/>
 
 
         </LinearLayout>
@@ -96,7 +105,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='VIN:'
+                    android:text='@{"VIN: "+viewModel.vin}'
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -110,7 +119,16 @@
                 android:textColor="@color/white"
                 android:drawableRight="@drawable/baseline_qr_code_scanner_24"
                 android:drawableTint="@color/white"
+                android:visibility="@{viewModel.isTractorVinScanned ? View.GONE : View.VISIBLE}"
                 android:text="SCAN"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:tint="@color/colorPrimary"
+                android:visibility="@{viewModel.isTractorVinScanned ? View.VISIBLE : View.GONE}"
+                android:src="@drawable/baseline_check_circle_outline_24"
+                android:layout_weight="0.3"/>
 
         </LinearLayout>
 

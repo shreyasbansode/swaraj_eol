@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.carnot.swaraj.eol.EndOfLineTestingViewModel" />
@@ -40,7 +42,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='VIN:'
+                    android:text='@{"VIN: "+viewModel.vin}'
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -52,9 +54,19 @@
                 android:id="@+id/btnScanTractorVin"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/white"
+                android:visibility="@{viewModel.isVinScanned ? View.GONE : View.VISIBLE}"
                 android:drawableRight="@drawable/baseline_qr_code_scanner_24"
                 android:drawableTint="@color/white"
                 android:text="SCAN"/>
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:tint="@color/colorPrimary"
+                android:visibility="@{viewModel.isVinScanned ? View.VISIBLE : View.GONE}"
+                android:src="@drawable/baseline_check_circle_outline_24"
+                android:layout_weight="0.3"/>
 
         </LinearLayout>
 

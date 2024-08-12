@@ -27,9 +27,13 @@ class EndOfLineTestingViewModel : ViewModel() {
     private val _retryTime = MutableLiveData<Long>(0)
     val retryTime: LiveData<Long> get() = _retryTime
 
-    fun scanVin() {
+    private val _vin = MutableLiveData("")
+    val vin: LiveData<String> get() = _vin
+
+    fun scanVin(result: String) {
         // Simulate scanning VIN
         _isVinScanned.value = true
+        _vin.value = result
         // Start verifying connectivity
         verifyConnectivity()
     }

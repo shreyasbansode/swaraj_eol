@@ -41,7 +41,7 @@ class EndOfLineTestingActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK) {
             val result = data?.getStringExtra("SCAN_RESULT") ?: ""
             when (requestCode) {
-                1 -> viewModel.scanVin()
+                1 -> viewModel.scanVin(result)
             }
         }
     }

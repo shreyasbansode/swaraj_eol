@@ -13,6 +13,9 @@ class LinkDeviceAndTractorViewModel : ViewModel() {
     private val _isTractorVinScanned = MutableLiveData(false)
     val isTractorVinScanned: LiveData<Boolean> get() = _isTractorVinScanned
 
+    private val _vin = MutableLiveData("")
+    val vin: LiveData<String> get() = _vin
+
     private val _deviceImei = MutableLiveData("")
     val deviceImei: LiveData<String> get() = _deviceImei
 
@@ -23,13 +26,20 @@ class LinkDeviceAndTractorViewModel : ViewModel() {
     val isSubmitEnabled: LiveData<Boolean> get() = _isSubmitEnabled
 
     fun setDeviceQr(result: String) {
-        _isDeviceQrScanned.value = true
-        _deviceImei.value = "89746512230"  // Replace with actual parsed IMEI
-        _deviceIccid.value = "365536553565963"  // Replace with actual parsed ICCID
-        checkSubmitEnabled()
+        try {
+            if (result.split(" ").size > 2){
+                _isDeviceQrScanned.value = true
+                _deviceImei.value = result.split(" ")[0]  // Replace with actual parsed IMEI
+                _deviceIccid.value = result.split(" ")[1]  // Replace with actual parsed ICCID
+                checkSubmitEnabled()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun setTractorVin(result: String) {
+        _vin.value = result
         _isTractorVinScanned.value = true
         checkSubmitEnabled()
     }
