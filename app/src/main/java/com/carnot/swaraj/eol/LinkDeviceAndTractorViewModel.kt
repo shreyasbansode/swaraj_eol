@@ -3,13 +3,17 @@ package com.carnot.swaraj.eol
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.carnot.swaraj.eol.data.CreateDeviceRequest
+import com.carnot.swaraj.eol.data.CreateDeviceResponse
+import com.carnot.swaraj.eol.network.ApiResponse
 import com.carnot.swaraj.eol.network.ApiService
-import com.carnot.swaraj.eol.network.Repository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LinkDeviceAndTractorViewModel : ViewModel() {
 
     private val apiService: ApiService = ApiService.create()
-    private val repository: Repository = Repository(apiService)
 
     private val _isDeviceQrScanned = MutableLiveData(false)
     val isDeviceQrScanned: LiveData<Boolean> get() = _isDeviceQrScanned
@@ -28,6 +32,10 @@ class LinkDeviceAndTractorViewModel : ViewModel() {
 
     private val _isSubmitEnabled = MutableLiveData(false)
     val isSubmitEnabled: LiveData<Boolean> get() = _isSubmitEnabled
+
+   val apiResponse: LiveData<ApiResponse<CreateDeviceResponse?>> get() = _apiResponse
+    private val _apiResponse  = MutableLiveData<ApiResponse<CreateDeviceResponse?>>()
+
 
     fun setDeviceQr(result: String) {
         try {
@@ -50,5 +58,17 @@ class LinkDeviceAndTractorViewModel : ViewModel() {
 
     private fun checkSubmitEnabled() {
         _isSubmitEnabled.value = _isDeviceQrScanned.value == true && _isTractorVinScanned.value == true
+    }
+
+    fun onSubmitClick(){
+        viewModelScope.launch(Dispatchers.IO){
+            _apiResponse.value = ApiResponse.Loading
+           val response =  apiService.createDevice(CreateDeviceRequest(imei = _deviceImei.value.toString(), iccid = _deviceIccid.value.toString(), vin = _vin.value.toString(), tractor_model_id = null))
+            if (response.status){
+                _apiResponse.value = ApiResponse.Success(response.data)
+            }else{
+                _apiResponse.value = ApiResponse.Error("")
+            }
+        }
     }
 }
