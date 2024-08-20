@@ -110,7 +110,7 @@
             android:background="@color/colorPrimary"
             android:padding="8dp"
             android:textSize="10sp"
-            android:onClick="@{() -> viewModel.verifyConnectivity()}"
+            android:onClick="@{() -> viewModel.onRetry()}"
             />
 
     </LinearLayout>

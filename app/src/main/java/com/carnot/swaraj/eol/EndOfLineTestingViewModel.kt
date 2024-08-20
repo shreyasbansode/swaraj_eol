@@ -4,15 +4,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.carnot.swaraj.eol.data.CreateDeviceRequest
+import com.carnot.swaraj.eol.data.CreateDeviceResponse
+import com.carnot.swaraj.eol.data.DeviceStatusRequest
+import com.carnot.swaraj.eol.data.DeviceStatusResponse
+import com.carnot.swaraj.eol.data.PostInstallationTestRequest
+import com.carnot.swaraj.eol.data.PostInstallationTestResponse
+import com.carnot.swaraj.eol.network.ApiResponse
 import com.carnot.swaraj.eol.network.ApiService
-import com.carnot.swaraj.eol.network.Repository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
 
 class EndOfLineTestingViewModel : ViewModel() {
 
     private val apiService: ApiService = ApiService.create()
-    private val repository: Repository = Repository(apiService)
 
     private val _isVinScanned = MutableLiveData(false)
     val isVinScanned: LiveData<Boolean> get() = _isVinScanned
@@ -35,6 +43,14 @@ class EndOfLineTestingViewModel : ViewModel() {
     private val _vin = MutableLiveData("")
     val vin: LiveData<String> get() = _vin
 
+    val apiResponseStatus: LiveData<ApiResponse<DeviceStatusResponse?>> get() = _apiResponseStatus
+    private val _apiResponseStatus  = MutableLiveData<ApiResponse<DeviceStatusResponse?>>()
+
+    val apiResponseSubmit: LiveData<ApiResponse<PostInstallationTestResponse?>> get() = _apiResponseSubmit
+    private val _apiResponseSubmit  = MutableLiveData<ApiResponse<PostInstallationTestResponse?>>()
+
+    var activationId = 0;
+
     fun scanVin(result: String) {
         // Simulate scanning VIN
         _isVinScanned.value = true
@@ -42,22 +58,7 @@ class EndOfLineTestingViewModel : ViewModel() {
         // Start verifying connectivity
         //verifyConnectivity()
         startRetryTimer()
-    }
-
-    fun verifyConnectivity() {
-        viewModelScope.launch {
-            delay(5000) // Simulate a delay for verification
-            // Randomly set statuses for demonstration
-            _gpsLockStatus.value = true
-            _gsmPingStatus.value = false
-            _batteryChargingStatus.value = true
-            _isSubmitEnabled.value = _gpsLockStatus.value == true &&
-                    _gsmPingStatus.value == true &&
-                    _batteryChargingStatus.value == true
-            if (_isSubmitEnabled.value == false) {
-                startRetryTimer()
-            }
-        }
+        onVinScanned()
     }
 
     private fun startRetryTimer() {
@@ -71,12 +72,50 @@ class EndOfLineTestingViewModel : ViewModel() {
                 timeLeft -= 1
             }
             _retryTime.value = "0"
+            _isSubmitEnabled.value = true
             // Retry connectivity check after timer ends
-            verifyConnectivity()
         }
     }
 
     fun submit() {
-        // Handle submission
+        viewModelScope.launch(Dispatchers.IO){
+            _apiResponseSubmit.value = ApiResponse.Loading
+            val response =  apiService.postInstallationTest(PostInstallationTestRequest( vin = _vin.value.toString(), activation_id = activationId, gsm_status = _gpsLockStatus.value!!, gps_lock_status = _gpsLockStatus.value!!, battery_voltage = _batteryChargingStatus.value!!, latitude = null, longitude = null))
+            if (response.status){
+                _apiResponseSubmit.value = ApiResponse.Success(response.data)
+            }else{
+                _apiResponseSubmit.value = ApiResponse.Error("")
+            }
+        }
+    }
+
+    fun onRetry(){
+        startRetryTimer()
+        onVinScanned()
+    }
+
+    private fun onVinScanned(){
+        viewModelScope.launch(Dispatchers.IO){
+            _apiResponseStatus.value = ApiResponse.Loading
+            val response =  apiService.getDeviceStatus(DeviceStatusRequest( vin = _vin.value.toString()))
+            if (response.status){
+                _apiResponseStatus.value = ApiResponse.Success(response.data)
+                _gpsLockStatus.value = response.data!!.gps
+                _gsmPingStatus.value = response.data!!.gsm
+                _batteryChargingStatus.value = response.data!!.battery
+                activationId = response.data!!.activation_id
+
+                if (_gpsLockStatus.value == true &&
+                    _gsmPingStatus.value == true &&
+                    _batteryChargingStatus.value == true){
+                    _isSubmitEnabled.value =  true
+                }else{
+                    delay(500)
+                    onVinScanned()
+                }
+            }else{
+                _apiResponseStatus.value = ApiResponse.Error("")
+            }
+        }
     }
 }
