@@ -33,7 +33,7 @@ interface ApiService {
     companion object {
         fun create(): ApiService {
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://api.example.com/")
+                .baseUrl("https://app.uat.swarajtm.in/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
             return retrofit.create(ApiService::class.java)

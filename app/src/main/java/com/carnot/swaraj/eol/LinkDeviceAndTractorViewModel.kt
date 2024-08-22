@@ -61,7 +61,7 @@ class LinkDeviceAndTractorViewModel : ViewModel() {
     }
 
     fun onSubmitClick(){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch{
             _apiResponse.value = ApiResponse.Loading
            val response =  apiService.createDevice(CreateDeviceRequest(imei = _deviceImei.value.toString(), iccid = _deviceIccid.value.toString(), vin = _vin.value.toString(), tractor_model_id = null))
             if (response.status){

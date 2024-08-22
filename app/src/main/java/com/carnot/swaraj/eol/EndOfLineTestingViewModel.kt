@@ -78,7 +78,7 @@ class EndOfLineTestingViewModel : ViewModel() {
     }
 
     fun submit() {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch{
             _apiResponseSubmit.value = ApiResponse.Loading
             val response =  apiService.postInstallationTest(PostInstallationTestRequest( vin = _vin.value.toString(), activation_id = activationId, gsm_status = _gpsLockStatus.value!!, gps_lock_status = _gpsLockStatus.value!!, battery_voltage = _batteryChargingStatus.value!!, latitude = null, longitude = null))
             if (response.status){
@@ -95,7 +95,7 @@ class EndOfLineTestingViewModel : ViewModel() {
     }
 
     private fun onVinScanned(){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch{
             _apiResponseStatus.value = ApiResponse.Loading
             val response =  apiService.getDeviceStatus(DeviceStatusRequest( vin = _vin.value.toString()))
             if (response.status){
@@ -110,7 +110,7 @@ class EndOfLineTestingViewModel : ViewModel() {
                     _batteryChargingStatus.value == true){
                     _isSubmitEnabled.value =  true
                 }else{
-                    delay(500)
+                    delay(2000)
                     onVinScanned()
                 }
             }else{
