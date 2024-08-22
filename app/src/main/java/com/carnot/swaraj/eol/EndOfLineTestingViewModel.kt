@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.carnot.swaraj.eol.data.BatteryVoltage
 import com.carnot.swaraj.eol.data.CreateDeviceRequest
 import com.carnot.swaraj.eol.data.CreateDeviceResponse
 import com.carnot.swaraj.eol.data.DeviceStatusRequest
 import com.carnot.swaraj.eol.data.DeviceStatusResponse
+import com.carnot.swaraj.eol.data.GpsLockStatus
+import com.carnot.swaraj.eol.data.GsmStatus
 import com.carnot.swaraj.eol.data.PostInstallationTestRequest
 import com.carnot.swaraj.eol.data.PostInstallationTestResponse
 import com.carnot.swaraj.eol.network.ApiResponse
@@ -80,7 +83,7 @@ class EndOfLineTestingViewModel : ViewModel() {
     fun submit() {
         viewModelScope.launch{
             _apiResponseSubmit.value = ApiResponse.Loading
-            val response =  apiService.postInstallationTest(PostInstallationTestRequest( vin = _vin.value.toString(), activation_id = activationId, gsm_status = _gpsLockStatus.value!!, gps_lock_status = _gpsLockStatus.value!!, battery_voltage = _batteryChargingStatus.value!!, latitude = null, longitude = null))
+            val response =  apiService.postInstallationTest(PostInstallationTestRequest( vin = _vin.value.toString(), activation_id = activationId, gsm_status = GsmStatus(status =_gpsLockStatus.value!!), gps_lock_status = GpsLockStatus(status =_gpsLockStatus.value!!), battery_voltage = BatteryVoltage(status =_batteryChargingStatus.value!!), latitude = null, longitude = null))
             if (response.status){
                 _apiResponseSubmit.value = ApiResponse.Success(response.data)
             }else{
@@ -110,8 +113,10 @@ class EndOfLineTestingViewModel : ViewModel() {
                     _batteryChargingStatus.value == true){
                     _isSubmitEnabled.value =  true
                 }else{
-                    delay(2000)
-                    onVinScanned()
+                    if(_retryTime.value != "0"){
+                        delay(2000)
+                        onVinScanned()
+                    }
                 }
             }else{
                 _apiResponseStatus.value = ApiResponse.Error("")
