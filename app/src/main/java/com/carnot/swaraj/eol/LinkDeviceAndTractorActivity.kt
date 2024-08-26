@@ -67,7 +67,7 @@ class LinkDeviceAndTractorActivity : AppCompatActivity() {
                 }
                 is ApiResponse.Success -> {
                     loadingDialog.dismiss()
-                    customDialog.show("Device and Tractor Lined Successfully")
+                    customDialog.show("Device and Tractor Linked Successfully")
                 }
             }
         }
