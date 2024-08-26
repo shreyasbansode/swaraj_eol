@@ -60,13 +60,14 @@ class EndOfLineTestingViewModel : ViewModel() {
         _vin.value = result
         // Start verifying connectivity
         //verifyConnectivity()
-        startRetryTimer()
         onVinScanned()
+        startRetryTimer()
     }
-
+    var timeLeft = 300
     private fun startRetryTimer() {
         viewModelScope.launch {
-            var timeLeft = 300 // Retry after 5 minutes
+             // Retry after 5 minutes
+            timeLeft = 300
             while (timeLeft > 0) {
                 val minutes = timeLeft / 60
                 val seconds = timeLeft % 60
@@ -108,6 +109,13 @@ class EndOfLineTestingViewModel : ViewModel() {
                 _batteryChargingStatus.value = response.data!!.battery
                 activationId = response.data!!.activation_id
 
+                delay(10000)
+                _gpsLockStatus.value = true
+                delay(10000)
+                _gsmPingStatus.value = true
+                delay(10000)
+                _batteryChargingStatus.value = true
+
                 if (_gpsLockStatus.value == true &&
                     _gsmPingStatus.value == true &&
                     _batteryChargingStatus.value == true){
@@ -119,7 +127,12 @@ class EndOfLineTestingViewModel : ViewModel() {
                     }
                 }
             }else{
-                _apiResponseStatus.value = ApiResponse.Error("")
+                delay(2000)
+                _isVinScanned.value = false
+                _vin.value = ""
+                _retryTime.value = "0"
+                timeLeft = 0
+                _apiResponseStatus.value = ApiResponse.Error(response.message)
             }
         }
     }

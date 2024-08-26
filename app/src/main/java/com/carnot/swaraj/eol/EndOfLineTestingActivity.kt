@@ -48,26 +48,26 @@ class EndOfLineTestingActivity : AppCompatActivity() {
                 qrCodeScan(1)
         }
 
-        /*viewModel.apiResponseStatus.observe(this) { response ->
+        viewModel.apiResponseStatus.observe(this) { response ->
 
             when(response){
                 is ApiResponse.Loading->{
-                    loadingDialog.show("Submitting...")
+                   // loadingDialog.show("Submitting...")
                 }
                 is ApiResponse.Error -> {
                     // Dismiss loading dialog
-                    loadingDialog.dismiss()
+                    //loadingDialog.dismiss()
 
                     // Show error message
                     Toast.makeText(this, "Error: ${response.message}", Toast.LENGTH_SHORT).show()
 
                 }
                 is ApiResponse.Success -> {
-                    loadingDialog.dismiss()
+                   // loadingDialog.dismiss()
 
                 }
             }
-        }*/
+        }
 
         viewModel.apiResponseSubmit.observe(this) { response ->
 
