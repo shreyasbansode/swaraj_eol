@@ -109,6 +109,7 @@
             android:textColor="@android:color/white"
             android:background="@color/colorPrimary"
             android:padding="8dp"
+            android:visibility="@{viewModel.hideRefresh ? View.GONE : View.VISIBLE}"
             android:textSize="10sp"
             android:onClick="@{() -> viewModel.onRetry()}"
             />

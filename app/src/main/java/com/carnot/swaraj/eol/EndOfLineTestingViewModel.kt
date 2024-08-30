@@ -63,11 +63,18 @@ class EndOfLineTestingViewModel : ViewModel() {
         onVinScanned()
         startRetryTimer()
     }
-    var timeLeft = 300
+
+    val timerValue = 120
+
+    var refreshCounter = 0
+
+    var hideRefresh = false
+
+    var timeLeft = timerValue
     private fun startRetryTimer() {
         viewModelScope.launch {
              // Retry after 5 minutes
-            timeLeft = 300
+            timeLeft = timerValue
             while (timeLeft > 0) {
                 val minutes = timeLeft / 60
                 val seconds = timeLeft % 60
@@ -76,7 +83,10 @@ class EndOfLineTestingViewModel : ViewModel() {
                 timeLeft -= 1
             }
             _retryTime.value = "0"
-            _isSubmitEnabled.value = true
+            if (refreshCounter == 1){
+                hideRefresh = true
+                _isSubmitEnabled.value = true
+            }
             // Retry connectivity check after timer ends
         }
     }
@@ -94,6 +104,7 @@ class EndOfLineTestingViewModel : ViewModel() {
     }
 
     fun onRetry(){
+        refreshCounter = +refreshCounter
         startRetryTimer()
         onVinScanned()
     }
@@ -127,11 +138,12 @@ class EndOfLineTestingViewModel : ViewModel() {
                     }
                 }
             }else{
-                delay(2000)
+                delay(1000)
                 _isVinScanned.value = false
                 _vin.value = ""
                 _retryTime.value = "0"
                 timeLeft = 0
+                refreshCounter = 0
                 _apiResponseStatus.value = ApiResponse.Error(response.message)
             }
         }

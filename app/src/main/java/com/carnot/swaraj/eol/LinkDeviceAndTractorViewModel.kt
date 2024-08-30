@@ -9,6 +9,7 @@ import com.carnot.swaraj.eol.data.CreateDeviceResponse
 import com.carnot.swaraj.eol.network.ApiResponse
 import com.carnot.swaraj.eol.network.ApiService
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LinkDeviceAndTractorViewModel : ViewModel() {
@@ -40,10 +41,35 @@ class LinkDeviceAndTractorViewModel : ViewModel() {
     fun setDeviceQr(result: String) {
         try {
             if (result.split(" ").size > 2){
+
+                val imei = result.split(" ")[0]
+                val iccid = result.split(" ")[1]
+
+                if (imei.length != 15) {
+                    viewModelScope.launch {
+                        delay(100)
+                        _apiResponse.value = ApiResponse.Error("Wrong QR, Please provide Correct QR Code")
+                    }
+
+                    return;
+                }
+
+                if (iccid.length < 18 || iccid.length > 20) {
+                    viewModelScope.launch {
+                        delay(100)
+                        _apiResponse.value = ApiResponse.Error("Wrong QR, Please provide Correct QR Code")
+                    }
+                    return;
+                }
                 _isDeviceQrScanned.value = true
-                _deviceImei.value = result.split(" ")[0]  // Replace with actual parsed IMEI
-                _deviceIccid.value = result.split(" ")[1]  // Replace with actual parsed ICCID
+                _deviceImei.value = imei
+                _deviceIccid.value = iccid
                 checkSubmitEnabled()
+            }else{
+                viewModelScope.launch {
+                    delay(100)
+                    _apiResponse.value = ApiResponse.Error("Wrong QR, Please provide Correct QR Code")
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
