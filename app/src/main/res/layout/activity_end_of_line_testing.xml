@@ -139,6 +139,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="GPS LOCK" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@{viewModel.gpsLockStatus ? @color/colorPrimary : @color/colorAccent}"
+                    android:text='@{viewModel.gpsLockStatus ? "Pass" : "Fail"}' />
             </LinearLayout>
 
             <LinearLayout
@@ -158,6 +170,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="GSM PING" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@{viewModel.gsmPingStatus ? @color/colorPrimary : @color/colorAccent}"
+                    android:text='@{viewModel.gsmPingStatus ? "Pass" : "Fail"}' />
             </LinearLayout>
 
             <LinearLayout
@@ -177,6 +201,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="BATTERY CHARGING" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@{viewModel.batteryChargingStatus ? @color/colorPrimary : @color/colorAccent}"
+                    android:text='@{viewModel.batteryChargingStatus ? "Pass" : "Fail"}' />
             </LinearLayout>
         </LinearLayout>
         <View
