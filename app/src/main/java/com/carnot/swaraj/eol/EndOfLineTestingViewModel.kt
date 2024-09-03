@@ -98,7 +98,7 @@ class EndOfLineTestingViewModel : ViewModel() {
             if (response.status){
                 _apiResponseSubmit.value = ApiResponse.Success(response.data)
             }else{
-                _apiResponseSubmit.value = ApiResponse.Error("")
+                _apiResponseSubmit.value = ApiResponse.Error(response.message)
             }
         }
     }
@@ -120,12 +120,12 @@ class EndOfLineTestingViewModel : ViewModel() {
                 _batteryChargingStatus.value = response.data!!.battery
                 activationId = response.data!!.activation_id
 
-                delay(10000)
+                /*delay(10000)
                 _gpsLockStatus.value = true
                 delay(10000)
                 _gsmPingStatus.value = true
                 delay(10000)
-                _batteryChargingStatus.value = true
+                _batteryChargingStatus.value = true*/
 
                 if (_gpsLockStatus.value == true &&
                     _gsmPingStatus.value == true &&
