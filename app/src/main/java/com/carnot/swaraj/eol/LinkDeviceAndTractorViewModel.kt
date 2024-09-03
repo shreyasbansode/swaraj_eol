@@ -93,7 +93,7 @@ class LinkDeviceAndTractorViewModel : ViewModel() {
             if (response.status){
                 _apiResponse.value = ApiResponse.Success(response.data)
             }else{
-                _apiResponse.value = ApiResponse.Error("")
+                _apiResponse.value = ApiResponse.Error(response.message)
             }
         }
     }

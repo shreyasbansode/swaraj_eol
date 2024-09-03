@@ -62,7 +62,7 @@ class LinkDeviceAndTractorActivity : AppCompatActivity() {
                     loadingDialog.dismiss()
 
                     // Show error message
-                    Toast.makeText(this, "Error: ${response.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "${response.message}", Toast.LENGTH_SHORT).show()
 
                 }
                 is ApiResponse.Success -> {
